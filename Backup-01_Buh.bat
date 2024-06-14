@@ -1,41 +1,41 @@
 CLS
 ECHO OFF
-CHCP 1251
+# CHCP 1251
 
-REM Óäàëåíèå êîïèé ñòàðøå 7 äíåé
+REM Ð£Ð´Ð°Ð»ÐµÐ½Ð¸Ðµ ÐºÐ¾Ð¿Ð¸Ð¹ ÑÑ‚Ð°Ñ€ÑˆÐµ 7 Ð´Ð½ÐµÐ¹
 forfiles /p "C:\Base\01_Buh\Backup" /S /D -7 /C "cmd /c del /f /a /q @file"
 
-REM Óñòàíîâêà ïåðåìåííûõ îêðóæåíèÿ
+REM Ð£ÑÑ‚Ð°Ð½Ð¾Ð²ÐºÐ° Ð¿ÐµÑ€ÐµÐ¼ÐµÐ½Ð½Ñ‹Ñ… Ð¾ÐºÑ€ÑƒÐ¶ÐµÐ½Ð¸Ñ
 SET PGDATABASE=01_Buh
 SET PGHOST=localhost
 SET PGPORT=5432
 SET PGUSER=postgres
 SET PGPASSWORD=1234
 
-REM Ôîðìèðîâàíèå èìåíè ôàéëà ðåçåðâíîé êîïèè è ôàéëà-îò÷åòà
+REM Ð¤Ð¾Ñ€Ð¼Ð¸Ñ€Ð¾Ð²Ð°Ð½Ð¸Ðµ Ð¸Ð¼ÐµÐ½Ð¸ Ñ„Ð°Ð¹Ð»Ð° Ñ€ÐµÐ·ÐµÑ€Ð²Ð½Ð¾Ð¹ ÐºÐ¾Ð¿Ð¸Ð¸ Ð¸ Ñ„Ð°Ð¹Ð»Ð°-Ð¾Ñ‚Ñ‡ÐµÑ‚Ð°
 SET DATETIME=%DATE:~6,4%-%DATE:~3,2%-%DATE:~0,2% %TIME:~0,2%-%TIME:~3,2%-%TIME:~6,2%
 SET DUMPFILE=%PGDATABASE% %DATETIME%.backup
 SET LOGFILE=%PGDATABASE% %DATETIME%.log
 SET DUMPPATH="C:\Base\01_Buh\Backup\%DUMPFILE%"
 SET LOGPATH="C:\Base\01_Buh\Backup\%LOGFILE%"
 
-REM Ñîçäàíèå ðåçåðâíîé êîïèè
+REM Ð¡Ð¾Ð·Ð´Ð°Ð½Ð¸Ðµ Ñ€ÐµÐ·ÐµÑ€Ð²Ð½Ð¾Ð¹ ÐºÐ¾Ð¿Ð¸Ð¸
 IF NOT EXIST Backup MD Backup
 CALL "C:\Program Files\PostgreSQL\11.9-1.1C\bin\pg_dump.exe" --format=custom --verbose --file=%DUMPPATH% 2>%LOGPATH%
 
-REM Àíàëèç êîäà çàâåðøåíèÿ
+REM ÐÐ½Ð°Ð»Ð¸Ð· ÐºÐ¾Ð´Ð° Ð·Ð°Ð²ÐµÑ€ÑˆÐµÐ½Ð¸Ñ
 IF NOT %ERRORLEVEL%==0 GOTO Error
 GOTO Successfull
 
-REM Â ñëó÷àå îøèáêè óäàëÿåòñÿ ïîâðåæäåííàÿ ðåçåðâíàÿ êîïèÿ è äåëàåòñÿ ñîîòâåòñòâóþùàÿ çàïèñü â æóðíàëå
+REM Ð’ ÑÐ»ÑƒÑ‡Ð°Ðµ Ð¾ÑˆÐ¸Ð±ÐºÐ¸ ÑƒÐ´Ð°Ð»ÑÐµÑ‚ÑÑ Ð¿Ð¾Ð²Ñ€ÐµÐ¶Ð´ÐµÐ½Ð½Ð°Ñ Ñ€ÐµÐ·ÐµÑ€Ð²Ð½Ð°Ñ ÐºÐ¾Ð¿Ð¸Ñ Ð¸ Ð´ÐµÐ»Ð°ÐµÑ‚ÑÑ ÑÐ¾Ð¾Ñ‚Ð²ÐµÑ‚ÑÑ‚Ð²ÑƒÑŽÑ‰Ð°Ñ Ð·Ð°Ð¿Ð¸ÑÑŒ Ð² Ð¶ÑƒÑ€Ð½Ð°Ð»Ðµ
 :Error
 DEL %DUMPPATH%
 MSG * "ERROR to create backup!!! See the information C:\Base\01_Buh\backup.log."
-ECHO %DATETIME% Îøèáêà ïðè ñîçäàíèè ðåçåðâíîé êîïèè %DUMPFILE%. Ñìîòðèòå %LOGFILE%. >> backup.log
+ECHO %DATETIME% ÐžÑˆÐ¸Ð±ÐºÐ° Ð¿Ñ€Ð¸ ÑÐ¾Ð·Ð´Ð°Ð½Ð¸Ð¸ Ñ€ÐµÐ·ÐµÑ€Ð²Ð½Ð¾Ð¹ ÐºÐ¾Ð¿Ð¸Ð¸ %DUMPFILE%. Ð¡Ð¼Ð¾Ñ‚Ñ€Ð¸Ñ‚Ðµ %LOGFILE%. >> backup.log
 GOTO End
 
-REM Â ñëó÷àå óäà÷íîãî ðåçåðâíîãî êîïèðîâàíèÿ ïðîñòî äåëàåòñÿ çàïèñü â æóðíàë
+REM Ð’ ÑÐ»ÑƒÑ‡Ð°Ðµ ÑƒÐ´Ð°Ñ‡Ð½Ð¾Ð³Ð¾ Ñ€ÐµÐ·ÐµÑ€Ð²Ð½Ð¾Ð³Ð¾ ÐºÐ¾Ð¿Ð¸Ñ€Ð¾Ð²Ð°Ð½Ð¸Ñ Ð¿Ñ€Ð¾ÑÑ‚Ð¾ Ð´ÐµÐ»Ð°ÐµÑ‚ÑÑ Ð·Ð°Ð¿Ð¸ÑÑŒ Ð² Ð¶ÑƒÑ€Ð½Ð°Ð»
 :Successfull
-ECHO %DATETIME% Óñïåøíîå ñîçäàíèå ðåçåðâíîé êîïèè %DUMPFILE% >> backup.log
+ECHO %DATETIME% Ð£ÑÐ¿ÐµÑˆÐ½Ð¾Ðµ ÑÐ¾Ð·Ð´Ð°Ð½Ð¸Ðµ Ñ€ÐµÐ·ÐµÑ€Ð²Ð½Ð¾Ð¹ ÐºÐ¾Ð¿Ð¸Ð¸ %DUMPFILE% >> backup.log
 GOTO End
 :End
