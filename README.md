@@ -1,2 +1,2 @@
-# dev-shell
+# shell
 Скрипты
