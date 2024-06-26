@@ -1,6 +1,6 @@
 CLS
 ECHO OFF
-# CHCP 1251
+CHCP 866
 
 REM Удаление копий старше 7 дней
 forfiles /p "C:\Base\01_Buh\Backup" /S /D -7 /C "cmd /c del /f /a /q @file"
